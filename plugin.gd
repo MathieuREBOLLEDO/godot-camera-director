@@ -16,4 +16,6 @@ func _enter_tree() -> void:
 	var file: FileAccess = FileAccess.open(TESTS_IGNORE, FileAccess.WRITE)
 	if file != null:
 		file.close()
-		get_editor_interface().get_resource_filesystem().scan()
+		# Différé : un scan pendant le chargement des plugins de l'éditeur le
+		# fait réactiver ce plugin (erreur « addon_name_to_plugin.has »).
+		get_editor_interface().get_resource_filesystem().scan.call_deferred()
