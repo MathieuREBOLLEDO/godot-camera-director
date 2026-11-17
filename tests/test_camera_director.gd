@@ -93,6 +93,18 @@ func test_disabled_refuses_play() -> void:
 	assert_false(_director.play(CameraSequence.new()), "empty sequence")
 
 
+func test_refuses_3d_shots() -> void:
+	var sequence: CameraSequence = _sequence([Rect2(0.0, 0.0, 10.0, 10.0)], 0.0)
+	sequence.shots.append(CameraShot3D.make(Transform3D.IDENTITY, 60.0, 0.0, 0.0))
+	assert_false(_director.play(sequence), "a 2D director cannot play a 3D shot")
+	assert_false(_director.is_playing(sequence))
+
+
+func test_joins_the_directors_group() -> void:
+	assert_true(_director.is_in_group(CameraDirectorBase.GROUP))
+	assert_has(CameraDebug.directors(_director.get_tree()), _director)
+
+
 func test_integer_zoom_rounds_down() -> void:
 	var view: Vector2 = _camera.get_viewport_rect().size
 	var frame: Rect2 = Rect2(Vector2.ZERO, view / 2.5)
